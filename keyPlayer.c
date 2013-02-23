@@ -3,8 +3,11 @@
 #include <ncurses.h>
 #include <stdio.h>
 
+#ifdef PI
+const char* mpg = "/usr/bin/mpg321";
+#else
 const char* mpg = "/usr/local/bin/mpg321";
-//const char* mpg = "/usr/bin/mpg321";
+#endif
 
 const char* instruments[90] = {
 "808/808clapgate.mp3"

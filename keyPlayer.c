@@ -102,22 +102,64 @@ const char* instruments[90] = {
 ,"808/neutr808kick.mp3"
 };
 
-void playShit(int keyCode) {
-  
-  int sampleCode = keyCode - 97;
+void p(char* s) {
+  printf("%s\n",s);
+  fflush(stdout);
+}
 
-  if (sampleCode > 89 || sampleCode < 0) {
-    printf("Complain bad index");
-    fflush(stdout);
+// Foot Pedal State
+int fp1 = 0;
+
+void playShit(int keyCode) {
+ 
+  int sampleCode = -1;
+
+  switch((char)keyCode & 0xFF) {
+
+  case 'a':
+    sampleCode = 20;
+    break;
+
+  case 'b':
+    sampleCode = 42;
+    break;
+
+  case 'c':
+    sampleCode = 38;
+    break;
+
+  case 'd':
+    sampleCode = 34;
+    break;
+
+  case 'e':
+    sampleCode = fp1 ? 21 : 40;
+    break;
+
+  case 'f':
+    fp1 = 1;
+    p("DS1 Foot Pedal down");
     return;
+
+  case 'F':
+    fp1 = 0;
+    p("DS1 Foot Pedal up");
+    return;
+
   }
   
+  sampleCode -= 13; // Just enter the line number
+
+  if (sampleCode > 89 || sampleCode < 0) {
+    p("Complain bad index");
+    return;
+  }
   const char* fname = instruments[sampleCode];
 
   printf("%s\r\n", fname);
   fflush(stdout);
 
-  const char* const args[10] = { mpg, "--quiet", "-k", "3", fname, NULL };
+  const char* const args[10] = { mpg, "--quiet", fname, NULL };
 
   int pid = fork();
   if (pid == 0) {
@@ -134,8 +176,6 @@ int main() {
   
   while(1) {
     int c = getch();
-    printf("%d\r\n", c);
-    fflush(stdout);
     playShit(c);
   }
 

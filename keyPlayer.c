@@ -9,7 +9,7 @@ const char* mpg = "/usr/bin/mpg321";
 const char* mpg = "/usr/local/bin/mpg321";
 #endif
 
-const char* instruments[90] = {
+const char* instruments[91] = {
 "808/808clapgate.mp3"
 ,"808/808claproom 1.mp3"
 ,"808/808kickgate2.mp3"
@@ -100,6 +100,7 @@ const char* instruments[90] = {
 ,"808/TR8-808sngated.mp3"
 ,"808/TR8-tambo1.mp3"
 ,"808/neutr808kick.mp3"
+,"808/dj.mp3"
 };
 
 void p(char* s) {
@@ -129,7 +130,7 @@ void playShit(int keyCode) {
     break;
 
   case 'd':
-    sampleCode = 34;
+    sampleCode = 103;
     break;
 
   case 'e':
@@ -152,7 +153,7 @@ void playShit(int keyCode) {
   
   sampleCode -= 13; // Just enter the line number
 
-  if (sampleCode > 89 || sampleCode < 0) {
+  if (sampleCode > 90 || sampleCode < 0) {
     p("Complain bad index");
     return;
   }

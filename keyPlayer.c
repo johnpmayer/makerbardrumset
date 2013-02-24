@@ -138,8 +138,10 @@ void playShit(int keyCode) {
 
   case 'f':
     fp1 = 1;
-    p("DS1 Foot Pedal down");
-    return;
+    sampleCode = 73;
+    //p("DS1 Foot Pedal down");
+    //return;
+    break;
 
   case 'F':
     fp1 = 0;

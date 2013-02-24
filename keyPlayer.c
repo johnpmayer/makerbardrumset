@@ -1,6 +1,7 @@
 
 #include <unistd.h>
 #include <ncurses.h>
+#include <signal.h>
 #include <stdio.h>
 
 #ifdef PI
@@ -9,7 +10,9 @@ const char* mpg = "/usr/bin/mpg321";
 const char* mpg = "/usr/local/bin/mpg321";
 #endif
 
-const char* instruments[91] = {
+#define ILEN (93)
+
+const char* instruments[ILEN] = {
 "808/808clapgate.mp3"
 ,"808/808claproom 1.mp3"
 ,"808/808kickgate2.mp3"
@@ -101,6 +104,8 @@ const char* instruments[91] = {
 ,"808/TR8-tambo1.mp3"
 ,"808/neutr808kick.mp3"
 ,"808/dj.mp3"
+,"808/shake1.mp3"
+,"808/shake2.mp3"
 };
 
 void p(char* s) {
@@ -111,35 +116,39 @@ void p(char* s) {
 // Foot Pedal State
 int fp1 = 0;
 
+int shakePid = 0;
+int shakeMode = 0;
+
 void playShit(int keyCode) {
  
   int sampleCode = -1;
+  int setShakePid = 0;
 
   switch((char)keyCode & 0xFF) {
 
   case 'a':
-    sampleCode = 20;
+    sampleCode = 7;
     break;
 
   case 'b':
-    sampleCode = 42;
+    sampleCode = 29;
     break;
 
   case 'c':
-    sampleCode = 38;
+    sampleCode = 25;
     break;
 
   case 'd':
-    sampleCode = 103;
+    sampleCode = 90;
     break;
 
   case 'e':
-    sampleCode = fp1 ? 21 : 40;
+    sampleCode = fp1 ? 8 : 27;
     break;
 
   case 'f':
     fp1 = 1;
-    sampleCode = 73;
+    sampleCode = 60;
     //p("DS1 Foot Pedal down");
     //return;
     break;
@@ -149,11 +158,36 @@ void playShit(int keyCode) {
     p("DS1 Foot Pedal up");
     return;
 
-  }
-  
-  sampleCode -= 13; // Just enter the line number
+  case '0':
+    if (shakeMode != 0 && shakePid > 0) {
+      kill(shakePid, SIGKILL);
+      shakeMode = 0;
+      p("killed track");
+      shakePid = 0;
+    }
+    return;
+    
+  case '1':
+    if (shakeMode != 1) {
+      if (shakePid > 0) kill(shakePid, SIGKILL);
+      sampleCode = 91;
+      setShakePid = 1;
+      shakeMode = 1;
+    }
+    break;
+    
+  case '2':
+    if (shakeMode != 2) {
+      if (shakePid > 0) kill(shakePid, SIGKILL);
+      sampleCode = 92;
+      setShakePid = 1;
+      shakeMode = 2;
+    }
+    break;
 
-  if (sampleCode > 90 || sampleCode < 0) {
+  }
+
+  if (sampleCode > (ILEN - 1) || sampleCode < 0) {
     p("Complain bad index");
     return;
   }
@@ -167,6 +201,9 @@ void playShit(int keyCode) {
   int pid = fork();
   if (pid == 0) {
     execv(mpg, args);
+  }
+  if (setShakePid == 1) {
+    shakePid = pid;
   }
 
 }

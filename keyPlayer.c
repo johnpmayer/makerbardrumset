@@ -41,7 +41,7 @@ void playShit(int keyCode) {
     break;
 
   case 'd':
-    fname = "808/dj.mp3";
+    fname = "808/TR8-808CX 41 FTL 1.mp3";
     break;
 
   case 'e':

@@ -1,0 +1,42 @@
+Friendly Name,Keystrokes,If this is true,then take this variable or MP3...,and do this to it.
+Left Drum Red Pad,a,,wub1,play
+Left Drum Yellow Pad,b,,wub2,play
+Left Drum Blue Pad,c,,wub3,play
+Left Drum Green Pad,d,,wub4,play
+Left Drum Yellow Cymbal,e,leftPedalDown is true,closedhihat,play
+“,“,leftPedalDown is false,openhihat,play
+Left Drum Pedal,fF,this is up,leftPedalDown,set false
+“,“,this is down,leftPedalDown,set true
+Middle Drum Red Pad,g,,snare,play
+Middle Drum Blue Pad,h,,kick,play
+Middle Drum Green Pad,i,,tom,play
+Middle Drum Yellow Cymbal,j,,cowbell,play
+Middle Drum Orange Cymbal,k,,crash,play
+Middle Drum Pedal,lL,,bass,play
+Right Drum Red Pad,m,,beatbox1,play
+Right Drum Yellow Pad,n,,beatbox2,play
+Right Drum Blue Pad,o,,beatbox3,play
+Right Drum Green Pad,p,,beatbox4,play
+Right Drum Blue Cymbal,q,,clap,play
+Right Drum Green Cymbal,r,,gong,play
+DJ Button,s,,airhorn,play
+DJ Knob,tT,this is clockwise,click,play
+“,“,this is counterclockwise,clack,play
+DJ Fader,uvw,this is left,powerdown,play
+“,“,this is right,powerup,play
+DJ Green Button,xX,this is up,greenButtonDown,set false
+“,“,this is down,greenButtonDown,set true
+DJ Red Button,yY,this is up,redButtonDown,set false
+“,“,this is down,redButtonDown,set true
+DJ Blue Button,zZ,this is up,blueButtonDown,set false
+“,“,this is down,blueButtonDown,set true
+DJ Turntable,102,this is clockwise or counterclockwise and redButtonDown is true,scratch1,play
+“,“,this is clockwise or counterclockwise and greenButtonDown is true,scratch2,play
+“,“,this is clockwise or counterclockwise and blueButtonDown is true,scratch3,play
+“,“,this is clockwise and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,harlemshakeintro,play
+“,“,this is clockwise and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,harlemshakemainpart,stop
+“,“,this is counterclockwise and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,harlemshakemainpart,play
+“,“,this is counterclockwise and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,harlemshakeintro,stop
+“,“,this is stopped and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,pickupneedle,play
+“,“,this is stopped and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,harlemshakeintro,stop
+“,“,this is stopped and redButtonDown is false and greenButtonDown is false and blueButtonDown is false,harlemshakemainpart,stop

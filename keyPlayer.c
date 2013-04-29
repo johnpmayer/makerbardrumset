@@ -1,8 +1,9 @@
 
-#include <unistd.h>
-#include <ncurses.h>
+#include <errno.h>
 #include <signal.h>
 #include <stdio.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #ifdef PI
 const char* mpg = "/usr/bin/mpg321";
@@ -26,14 +27,35 @@ int blueButton = 0;
 int shakePid = 0;
 int shakeMode = 0;
 
-int childCount = 0;
-#define MAXCHILDREN 5
+int started = 0;
+int finished = 0;
+#define MAXCHILDREN 8
 
 int airhornPid = 0;
 
 void playShit(int keyCode) {
 
-  if (childCount >= MAXCHILDREN) return;
+  int pid, status, serrno;
+  serrno = errno;
+  while (1)
+  {
+    pid = waitpid (WAIT_ANY, &status, WNOHANG);
+    if (pid < 0)
+    {
+      perror ("waitpid");
+      break;
+    }
+    if (pid == 0)
+      break;
+    printf("Pid terminated %d\n",pid);
+    fflush(stdout);
+    finished++;
+  }
+  errno = serrno;
+  if ((started - finished) >= MAXCHILDREN) {
+    printf("Too many\n");
+    return;
+  }
 
   char* fname = NULL;
   int setShakePid = 0;
@@ -211,7 +233,9 @@ void playShit(int keyCode) {
     if (pid == 0) {
       execv(mpg, args);
     } else {
-      childCount += 1;
+      started++;
+      printf("Children: %d\n", (started - finished));
+      fflush(stdout);
     }
 
     if (setShakePid == 1) {
@@ -225,21 +249,13 @@ void playShit(int keyCode) {
 
 }
 
-void child_handler(int sig) {
-  printf("Child died\n");
-  childCount -= 1;
-}
-
 int main() {
 
-  signal(SIGCHLD, &child_handler);
-
-  WINDOW *w = initscr();
-  noecho();
-  nodelay(w, FALSE);
+  setbuf(stdout, NULL);
 
   while(1) {
-    int c = getch();
+    int c;
+    read(0,&c,1);
     playShit(c);
   }
 

@@ -21,8 +21,13 @@ int fp1 = 0;
 int shakePid = 0;
 int shakeMode = 0;
 
+int childCount = 0;
+#define MAXCHILDREN 5
+
 void playShit(int keyCode) {
  
+  if (childCount >= MAXCHILDREN) return;
+
   char* fname = NULL;
   int setShakePid = 0;
 
@@ -98,6 +103,8 @@ void playShit(int keyCode) {
   int pid = fork();
   if (pid == 0) {
     execv(mpg, args);
+  } else {
+    childCount += 1;
   }
   if (setShakePid == 1) {
     shakePid = pid;
@@ -105,7 +112,14 @@ void playShit(int keyCode) {
 
 }
 
+void child_handler(int sig) {
+  printf("Child died\n");
+  childCount -= 1;
+}
+
 int main() {
+
+  signal(SIGCHLD, &child_handler);
 
   WINDOW *w = initscr();
   noecho();
